@@ -1,7 +1,21 @@
 <template>
   <div class="zoom-slider-container">
     <img
-      :src="require('../assets/Layer 36.png')"
+      :src="require('../assets/Shape 1 copy 2.png')"
+      alt="Previous"
+      class="app-slider-arrow app-slider-arrow-prev"
+      @click="previousSlide"
+    />
+    <img
+      :src="require('../assets/Shape 1 copy.png')"
+      alt="Next"
+      class="app-slider-arrow app-slider-arrow-next"
+      @click="nextSlide"
+    />
+    <img
+      v-for="(image, index) in imgs"
+      :key="image"
+      :src="index == current_slide ? require(`../assets/${image}`) : ''"
       alt=""
       class="zoom-img zoom-img-lg"
     />
@@ -11,57 +25,165 @@
       class="zoom-img zoom-img-gradient"
     />
     <div class="zoom-slider slick-slider">
-      <img
-        :src="require('../assets/Layer 36.png')"
-        alt="slika zoom slider 1"
-        class="zoom-slider-img active ml-n30"
-      />
-      <img
-        :src="require('../assets/img-2.jpg')"
-        alt="slika zoom slider 2"
-        class="zoom-slider-img ml-n30"
-      />
-      <img
-        :src="require('../assets/Layer 39.png')"
-        alt="slika zoom slider 3"
-        class="zoom-slider-img"
-      />
-      <img
-        :src="require('../assets/Layer40.png')"
-        alt="slika zoom slider 4"
-        class="zoom-slider-img"
-      />
-      <img
-        :src="require('../assets/Layer41.png')"
-        alt="slika zoom slider 5"
-        class="zoom-slider-img"
-      />
-      <img
-        :src="require('../assets/Layer42.png')"
-        alt="slika zoom slider 6"
-        class="zoom-slider-img"
-      />
-      <img
-        :src="require('../assets/Layer43.png')"
-        alt="slika zoom slider 7"
-        class="zoom-slider-img"
-      />
-      <img
-        :src="require('../assets/Layer44.png')"
-        alt="slika zoom slider 8"
-        class="zoom-slider-img"
-      />
+      <div class="slides" id="slides">
+        <TransitionGroup name="zoom-slide-in">
+          <div
+            class="zoom-slider-img-container"
+            v-for="(image, index) in imgs"
+            :key="image"
+            :id="'img-' + index"
+            :class="
+              index == current_slide ? `active ${animation}` : `${animation}`
+            "
+            @click="activeSlide"
+          >
+            <img
+              :src="require(`../assets/${image}`)"
+              :alt="'slika zoom slider' + index"
+              class="zoom-slider-img"
+            />
+          </div>
+        </TransitionGroup>
+      </div>
     </div>
     <img
       :src="require('../assets/search 1.svg')"
       alt=""
       class="zoom-img-icon zoom-img"
+      @click="showModal"
+    />
+  </div>
+  <div id="modal" class="modal">
+    <div class="modal-top">
+      <span class="modal-close" id="close" @click="hideModal">X</span>
+      <span class="modal-zoom-in" id="zoom-in" @click="zoomIn">Zoom-in</span>
+      <span class="modal-zoom-out" id="zoom-out" @click="zoomOut"
+        >Zoom-out</span
+      >
+    </div>
+    <img
+      v-for="(image, index) in imgs"
+      :key="image"
+      :src="index == current_slide ? require(`../assets/${image}`) : ''"
+      alt=""
+      :class="index == current_slide ? 'modal-img' : ''"
     />
   </div>
 </template>
 <script>
 export default {
   name: "ZoomSlider",
+  data() {
+    return {
+      current_slide: 0,
+      animation: "animate-slide-out",
+      isZoomSliderAnimating: false,
+      zoom: 1,
+      imgs: [
+        "Layer 36.png",
+        "img-2.jpg",
+        "Layer 39.png",
+        "Layer40.png",
+        "Layer41.png",
+        "Layer42.png",
+        "Layer43.png",
+        "Layer44.png",
+      ],
+    };
+  },
+  methods: {
+    nextSlide() {
+      if (!this.isZoomSliderAnimating) {
+        this.isZoomSliderAnimating = true;
+        let active_slide = document.getElementById("slides").firstElementChild;
+        active_slide.classList.remove("active");
+        //set new current_slide and add class active
+        let current_slide = this.current_slide;
+        this.current_slide =
+          current_slide == this.imgs.length - 1 ? 0 : current_slide + 1;
+        this.animation = "animate";
+        let all_slides = document.querySelectorAll(
+          ".zoom-slider-img-container"
+        );
+        all_slides.forEach((slide) => {
+          slide.classList.add("animate");
+        });
+        //append slide
+        document.getElementById("slides").appendChild(active_slide);
+        if (this.isZoomSliderAnimating) {
+          setTimeout(() => {
+            this.isZoomSliderAnimating = false;
+            all_slides.forEach((slide) => {
+              slide.classList.remove("animate");
+            });
+          }, 1000);
+        }
+      }
+    },
+    previousSlide() {
+      if (!this.isZoomSliderAnimating) {
+        this.isZoomSliderAnimating = true;
+        let new_slide = document.getElementById("slides").lastElementChild;
+        //set new current_slide and add class active
+        let current_slide = this.current_slide;
+        this.current_slide =
+          current_slide == 0 ? this.imgs.length - 1 : current_slide - 1;
+        this.animation = "animate-slide-out";
+        //prepend slide
+        document.getElementById("slides").prepend(new_slide);
+        let all_slides = document.querySelectorAll(
+          ".zoom-slider-img-container"
+        );
+        all_slides.forEach((slide) => {
+          slide.classList.add("animate-slide-out");
+        });
+        if (this.isZoomSliderAnimating) {
+          setTimeout(() => {
+            this.isZoomSliderAnimating = false;
+            all_slides.forEach((slide) => {
+              slide.classList.remove("animate-slide-out");
+            });
+          }, 1000);
+        }
+      }
+    },
+    activeSlide(e) {
+      let all_slides = document.querySelectorAll(".zoom-slider-img-container");
+      all_slides.forEach((slide) => {
+        slide.classList.remove("animate-slide-out");
+        slide.classList.remove("animate");
+      });
+      this.animation = "";
+      this.current_slide = parseFloat(e.target.parentElement.id.slice(4));
+      document
+        .querySelector(".active")
+        .classList.remove(["animate", "animate-slide-out"]);
+      //console.log(e.target.parentElement.id.slice(4));
+    },
+    showModal() {
+      document.getElementById("modal").style.visibility = "visible";
+      this.zoom = 1;
+    },
+    hideModal() {
+      document.getElementById("modal").style.visibility = "hidden";
+    },
+    zoomIn() {
+      if (this.zoom < 2.5) {
+        this.zoom += 0.4;
+      }
+      document.querySelector(
+        ".modal-img"
+      ).style.transform = `scale(${this.zoom})`;
+    },
+    zoomOut() {
+      if (this.zoom > 1) {
+        this.zoom -= 0.4;
+      }
+      document.querySelector(
+        ".modal-img"
+      ).style.transform = `scale(${this.zoom})`;
+    },
+  },
 };
 </script>
 <style lang="scss">
@@ -70,7 +192,6 @@ export default {
 $slick-prev-character: url("../assets/Shape 1 copy 2.png");
 $slick-next-character: url("../assets/Shape 1 copy.png");
 .zoom-slider-container {
-  position: relative;
   height: 400px;
   grid-column: 1 / span 3;
   background-color: $footer-header-bg;
@@ -81,12 +202,9 @@ $slick-next-character: url("../assets/Shape 1 copy.png");
   background-position-y: 50%;
   transition-timing-function: ease-in;
   background-blend-mode: color-burn;
-  //overflow: hidden;
+  position: relative;
   @include flexCenter();
 
-  .slick-slider {
-    padding: 0 20px;
-  }
   .zoom-img {
     position: absolute;
     &-lg {
@@ -107,40 +225,61 @@ $slick-next-character: url("../assets/Shape 1 copy.png");
 }
 .zoom-slider {
   width: 100%;
-  height: 100%;
-  .slick-track {
-    margin-top: 260px;
+  height: fit-content;
+  margin-top: 240px;
+  //border: red solid 4px;
+  padding: 0 7px;
+  position: relative;
+  overflow: hidden;
+  .slides {
+    display: flex;
+    //border: purple solid 4px;
+    width: fit-content;
   }
-  .slick-slide {
-    margin-right: 10px;
-    margin-bottom: 20px;
+  .zoom-slider-img-container {
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
     overflow: hidden;
-    img {
-      height: 120px;
-      min-width: min-content;
-      cursor: pointer;
-      display: flex;
-      opacity: 0.5;
+    margin: 6px;
+    &.animate {
+      animation-name: zoom-slider;
+      animation-duration: 1s;
+    }
+    &.animate-slide-out {
+      animation-name: zoom-slider-slide-out;
+      animation-duration: 1s;
+    }
+    &.active {
+      opacity: 1;
+      outline: $zoom-img-active 5px solid;
+      background-color: $zoom-img-active;
+      transition: ease-out 0.3s;
       &:hover {
-        opacity: 1;
-        outline: 2px solid $zoom-img-hover;
+        background-color: $zoom-img-hover;
       }
-      &.active {
-        padding: 5px 0;
-        background-color: $zoom-img-active;
+      .zoom-slider-img {
         opacity: 1;
-        transition: ease-out 0.3s;
-        &:hover {
-          background-color: $zoom-img-hover;
-        }
-      }
-      &.ml-n30 {
-        margin-left: -30%;
-        //margin: 0;
       }
     }
   }
+  .zoom-slider-img {
+    position: absolute;
+    height: 120px;
+    display: flex;
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+      outline: 2px solid $zoom-img-hover;
+    }
+  }
 }
+
 .modal {
   visibility: hidden;
   background-color: rgba($color: #363f48, $alpha: 0.97);
@@ -163,7 +302,7 @@ $slick-next-character: url("../assets/Shape 1 copy.png");
     width: 100%;
   }
   &-img {
-    display: none;
+    //display: none;
     padding: 80px 0;
     animation-name: zoom;
     animation-duration: 0.6s;
@@ -195,23 +334,30 @@ $slick-next-character: url("../assets/Shape 1 copy.png");
     left: 50vw;
   }
   &-zoom-in {
-    //top: 30%;
     cursor: zoom-in;
     padding-right: 30px;
     margin-left: -80px;
   }
   &-zoom-out {
-    //top: 40%;
     cursor: zoom-out;
   }
 }
 
-@keyframes zoom {
+@keyframes zoom-slider {
   from {
-    transform: scale(0);
+    transform: translateX(100%);
   }
   to {
-    transform: scale(1);
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoom-slider-slide-out {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
   }
 }
 </style>

@@ -48,37 +48,16 @@
       class="tech"
       carouselheadline="News Carousel"
       class_color="tech"
+      @next="nextSlideDouble(2)"
+      @previous="previousSlideDouble(2)"
     >
-      <div class="slick-slider slider4 row">
-        <div class="column single-item">
-          <img :src="require('../assets/Layer 52.png')" alt="slika" />
-          <p class="date">August 26, 2013</p>
-          <RouterLink to="/single"
-            ><p class="headline">
-              For Obama, MLK's shadow looms large ahead of speech
-            </p></RouterLink
-          >
-        </div>
-        <div class="column single-item">
-          <img :src="require('../assets/Layer 52.png')" alt="slika" />
-          <p class="date">August 26, 2013</p>
-          <RouterLink to="/single"
-            ><p class="headline">
-              For Obama, MLK's shadow looms large ahead of speech
-            </p></RouterLink
-          >
-        </div>
-        <!--<div class="column single-item">
-                        <img src="imgs/Layer 52.png" alt="slika">
-                        <p class="date">August 26, 2013</p>
-                        <router-link to="/single"><p class="headline">For Obama, MLK's shadow looms large ahead of speech</p></router-link>
-                    </div>
-                    <div class="column single-item">
-                        <img src="imgs/Layer 52.png" alt="slika">
-                        <p class="date">August 26, 2013</p>
-                        <router-link to="/single"><p class="headline">For Obama, MLK's shadow looms large ahead of speech</p></router-link>
-                    </div>-->
-      </div>
+      <MiniSliderDouble
+        :current_slide="this.current_slide"
+        :next_slide="next_slide"
+        :direction="directionDoubleSlider"
+        slider="slider4"
+      />
+      <!--<MiniSlider />-->
     </CategoryCardContainer>
     <!-- MiniSliders-->
     <CategoryCardContainer
@@ -93,6 +72,7 @@
       <MiniSlider
         :current_slide="this.mini_sliders[i].current_slide"
         :direction="direction"
+        slider="slider2"
       />
     </CategoryCardContainer>
 
@@ -114,6 +94,7 @@ import AppSlider from "../components/AppSlider.vue";
 import CategoryCardContainer from "../components/CategoryCardContainer.vue";
 import ZoomSlider from "../components/ZoomSlider.vue";
 import MiniSlider from "../components/MiniSlider.vue";
+import MiniSliderDouble from "../components/MiniSliderDouble.vue";
 export default {
   name: "ViewHome",
   components: {
@@ -122,12 +103,16 @@ export default {
     CategoryCardContainer,
     ZoomSlider,
     MiniSlider,
+    MiniSliderDouble,
   },
   data() {
     return {
       current_slide: 0,
+      next_slide: 1,
       direction: "slide-in",
-      isSlideAnimating1: false,
+      directionDoubleSlider: "slide-in",
+      isDoubleSliderAnimating: false,
+      isSlideAnimating: false,
       slideInterval: null,
       posts: [
         {
@@ -185,6 +170,44 @@ export default {
     };
   },
   methods: {
+    nextSlideDouble(step_parametar = 2) {
+      let step = step_parametar;
+      if (!this.isDoubleSliderAnimating) {
+        this.isDoubleSliderAnimating = true;
+        const index =
+          this.current_slide == 4 - 1 ? 0 : this.current_slide + step;
+        this.current_slide = index > 4 - 1 ? 0 : index;
+        const next = this.current_slide + 1;
+        this.next_slide = next > 4 - 1 ? 0 : next;
+        this.directionDoubleSlider = "slide-in";
+        console.log("Metoda nextSlideDouble.");
+        console.log(this.current_slide, this.next_slide);
+        if (this.isDoubleSliderAnimating) {
+          setTimeout(() => {
+            this.isDoubleSliderAnimating = false;
+          }, 1300);
+        }
+      }
+    },
+    previousSlideDouble(step_parametar = 2) {
+      let step = step_parametar;
+      if (!this.isDoubleSliderAnimating) {
+        this.isDoubleSliderAnimating = true;
+        const index =
+          this.current_slide == 0 ? 4 - step : this.current_slide - step;
+        this.current_slide = index;
+        const next = this.current_slide + 1;
+        this.next_slide = next > 4 - 1 ? 0 : next;
+        this.directionDoubleSlider = "slide-out";
+        console.log("Metoda previousSlideDouble.");
+        console.log(this.current_slide, this.next_slide);
+        if (this.isDoubleSliderAnimating) {
+          setTimeout(() => {
+            this.isDoubleSliderAnimating = false;
+          }, 1300);
+        }
+      }
+    },
     nextSlide(i) {
       let isSlideAnimating = this.mini_sliders[i].isSlideAnimating;
       if (!isSlideAnimating) {
@@ -228,11 +251,16 @@ export default {
       if (!isSlideAnimating) {
         this.mini_sliders[i].slideInterval = setInterval(() => {
           if (!isSlideAnimating) {
-            this.nextSlide(i);
+            //this.nextSlide(i);
           }
         }, 12000);
       }
     }
+    this.slideInterval = setInterval(() => {
+      if (!this.isDoubleSliderAnimating) {
+        this.nextSlideDouble(2);
+      }
+    }, 12000);
   },
 };
 </script>

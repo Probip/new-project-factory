@@ -3,11 +3,22 @@
   <div class="sidebar sidebar-category">
     <div class="tabs">
       <ul class="tabs-list">
-        <li class="active">Popular</li>
-        <li>Top Rated</li>
-        <li>Comments</li>
+        <li
+          v-for="(tab, i) in tabs"
+          :key="i"
+          :id="i"
+          :class="i == active_tab ? 'active' : ''"
+          @click="showTab"
+        >
+          {{ tab }}
+        </li>
       </ul>
-      <div class="tabs-content active" v-for="i in 3" :id="`tab-${i}`">
+      <div
+        class="tabs-content active"
+        v-for="(tab, i) in tabs"
+        :id="`tab-${i + 1}`"
+        v-show="active_tab == i"
+      >
         <div class="tabs-content-item row">
           <div class="column">
             <span class="comments date"
@@ -164,6 +175,18 @@
 <script>
 export default {
   name: "AppSidebar",
+  data() {
+    return {
+      active_tab: 0,
+      tabs: ["Popular", "Top Rated", "Comments"],
+    };
+  },
+  methods: {
+    showTab(e) {
+      console.log(this.active_tab, parseFloat(e.target.id));
+      this.active_tab = parseFloat(e.target.id);
+    },
+  },
 };
 </script>
 <style lang="scss">
@@ -212,13 +235,12 @@ export default {
       &.active {
         z-index: 2;
       }
-      /*
       &#tab-2 {
-        background-color: #435282;
+        background-color: #53488d;
       }
       &#tab-3 {
-        background-color: #754382;
-      }*/
+        background-color: #554c81;
+      }
       &-item {
         z-index: 1;
         padding: 20px 30px;

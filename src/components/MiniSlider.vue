@@ -1,15 +1,18 @@
+<!-- eslint-disable vue/no-use-v-if-with-v-for -->
+<!-- eslint-disable vue/require-v-for-key -->
 <!-- eslint-disable prettier/prettier -->
 <template>
-  <div class="row slick-slider slider2">
+  <div class="row slick-slider" :class="slider">
     <TransitionGroup :name="direction">
       <div class="single-item column" v-for="i in 3" :key="i" :id="i-1" v-show="i-1 == current_slide">
+        <span v-if="slider==='slider4'" v-show="i == current_slide || i -1 == current_slide"></span>
         <img :src="require('../assets/Layer 59.png')" alt="slika" />
         <p class="date">August 26, 2013</p>
-        <RouterLink to="/single"
-          ><p class="headline">
+        <RouterLink to="/single">
+           <p class="headline">
             {{ i }}For Obama, MLK's shadow looms large ahead of speech
-          </p></RouterLink
-        >
+          </p>
+          </RouterLink>
       </div>
     </TransitionGroup>
   </div>
@@ -17,7 +20,7 @@
 <script>
 export default {
   name: "MiniSLider",
-  props: ["current_slide", "direction"],
+  props: ["current_slide", "direction", "slider"],
 };
 </script>
 <style lang="scss">
@@ -85,6 +88,13 @@ export default {
     }
   }
 }
+.slider4 {
+  display: flex;
+  overflow: visible;
+  .single-item {
+    position: relative;
+  }
+}
 .slider-container {
   overflow: hidden;
   position: relative;
@@ -101,9 +111,6 @@ export default {
 .slider2,
 .slider4 {
   height: 240px;
-}
-.slider4 .single-item {
-  width: 45%;
 }
 .slide-in-enter-active,
 .slide-in-leave-active,

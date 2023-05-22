@@ -137,19 +137,6 @@ $slick-next-character: url("../assets/Shape\ 1\ copy.png");
       position: absolute;
     }
   }
-  //.slick-next::before,.slick-prev::before{background-color: red;}
-  .slick-prev,
-  .slick-next {
-    height: 55px;
-    width: 55px;
-    z-index: 5;
-  }
-  .slick-prev {
-    margin-left: 35px;
-  }
-  .slick-next {
-    margin-right: 35px;
-  }
   .single-item-app-slider {
     width: 100%;
     display: inline-block;
@@ -221,6 +208,11 @@ $slick-next-character: url("../assets/Shape\ 1\ copy.png");
   z-index: 2;
   padding: 0 10px;
   cursor: pointer;
+  opacity: 50%;
+  &:hover {
+    transition: 0.3s linear;
+    opacity: 1;
+  }
   &-next {
     right: 0;
   }
