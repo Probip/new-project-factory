@@ -19,101 +19,27 @@
         :id="`tab-${i + 1}`"
         v-show="active_tab == i"
       >
-        <div class="tabs-content-item row">
-          <div class="column">
-            <span class="comments date"
-              ><img
-                :src="require('../assets/comment ico.svg')"
-                alt="comment icon"
-              />
-              5</span
-            >
-            <p class="date">August 26, 2013</p>
-            <a href="./single.html"
-              ><p class="headline">
-                Palestinians call off peace talks after clash
-              </p></a
-            >
+        <span v-for="i in 5" :key="i">
+          <div class="tabs-content-item row">
+            <div class="column">
+              <span class="comments date"
+                ><img
+                  :src="require('../assets/comment ico.svg')"
+                  alt="comment icon"
+                />
+                5</span
+              >
+              <p class="date">August 26, 2013</p>
+              <router-link to="/single"
+                ><p class="headline">
+                  Palestinians call off peace talks after clash
+                </p></router-link
+              >
+            </div>
+            <img :src="require('../assets/Layer 5.png')" alt="article image" />
           </div>
-          <img :src="require('../assets/Layer 5.png')" alt="article image" />
-        </div>
-        <hr class="line" />
-        <div class="tabs-content-item row">
-          <div class="column">
-            <span class="comments date"
-              ><img
-                :src="require('../assets/comment ico.svg')"
-                alt="comment icon"
-              />
-              5</span
-            >
-            <p class="date">August 26, 2013</p>
-            <a href="./single.html"
-              ><p class="headline">
-                Palestinians call off peace talks after clash
-              </p></a
-            >
-          </div>
-          <img :src="require('../assets/Layer 5.png')" alt="article image" />
-        </div>
-        <hr class="line" />
-        <div class="tabs-content-item row">
-          <div class="column">
-            <span class="comments date"
-              ><img
-                :src="require('../assets/comment ico.svg')"
-                alt="comment icon"
-              />
-              5</span
-            >
-            <p class="date">August 26, 2013</p>
-            <a href="./single.html"
-              ><p class="headline">
-                Palestinians call off peace talks after clash
-              </p></a
-            >
-          </div>
-          <img :src="require('../assets/Layer 5.png')" alt="article image" />
-        </div>
-        <hr class="line" />
-        <div class="tabs-content-item row">
-          <div class="column">
-            <span class="comments date"
-              ><img
-                :src="require('../assets/comment ico.svg')"
-                alt="comment icon"
-              />
-              5</span
-            >
-            <p class="date">August 26, 2013</p>
-            <a href="./single.html"
-              ><p class="headline">
-                Palestinians call off peace talks after clash
-              </p></a
-            >
-          </div>
-          <img :src="require('../assets/Layer 5.png')" alt="article image" />
-        </div>
-        <hr class="line" />
-        <div class="tabs-content-item row">
-          <div class="column">
-            <span class="comments date"
-              ><img
-                :src="require('../assets/comment ico.svg')"
-                alt="comment icon"
-              />
-              5</span
-            >
-            <p class="date">August 26, 2013</p>
-            <a href="./single.html"
-              ><p class="headline">
-                Palestinians call off peace talks after clash
-              </p></a
-            >
-          </div>
-          <img :src="require('../assets/Layer 5.png')" alt="article image" />
-        </div>
-        <hr class="line" />
+          <hr class="line" />
+        </span>
       </div>
     </div>
     <div class="social">

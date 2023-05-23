@@ -1,5 +1,3 @@
-<!-- eslint-disable vue/valid-v-for -->
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <!--  HOME CONTENT START  -->
 
@@ -9,7 +7,7 @@
   <!-- main -->
   <div class="main main-index">
     <CategoryCardContainer class="news" category="News">
-      <div class="column" v-for="post in posts">
+      <div class="column" v-for="post in posts" :key="post">
         <img :src="require('../assets/Layer 59.png')" alt="slika" />
         <p class="date">{{ post.date }}</p>
         <RouterLink to="/single"
@@ -18,7 +16,7 @@
       </div>
     </CategoryCardContainer>
     <CategoryCardContainer class="sport" category="Sports">
-      <div class="column" v-for="post in posts">
+      <div class="column" v-for="post in posts" :key="post">
         <img :src="require('../assets/Layer 59.png')" alt="slika" />
         <p class="date">{{ post.date }}</p>
         <RouterLink to="/single"
@@ -31,7 +29,11 @@
     <AppBanner class="banner-md" />
 
     <CategoryCardContainer class="business" category="Business">
-      <div class="row business-content" v-for="post in posts_business">
+      <div
+        class="row business-content"
+        v-for="post in posts_business"
+        :key="post"
+      >
         <img :src="require('../assets/Layer 59.png')" alt="slika" />
         <div>
           <p class="date">{{ post.date }}</p>
@@ -48,12 +50,17 @@
       class="tech"
       carouselheadline="News Carousel"
       class_color="tech"
-      @next="nextSlideDouble(2)"
-      @previous="previousSlideDouble(2)"
+      @next="nextSlideDouble"
+      @previous="previousSlideDouble"
     >
-      <MiniSliderDouble
+      <!--<MiniSliderDouble
         :current_slide="this.current_slide"
         :next_slide="next_slide"
+        :direction="directionDoubleSlider"
+        slider="slider4"
+      />-->
+      <MiniSliderDoubleImproved
+        :current_slide="this.current_slide"
         :direction="directionDoubleSlider"
         slider="slider4"
       />
@@ -63,6 +70,7 @@
     <CategoryCardContainer
       class="travel col-span-1"
       v-for="(slider, i) in mini_sliders"
+      :key="i"
       :id="`mini-slider-${i}`"
       :carouselheadline="slider.headline"
       class_color="travel"
@@ -94,7 +102,7 @@ import AppSlider from "../components/AppSlider.vue";
 import CategoryCardContainer from "../components/CategoryCardContainer.vue";
 import ZoomSlider from "../components/ZoomSlider.vue";
 import MiniSlider from "../components/MiniSlider.vue";
-import MiniSliderDouble from "../components/MiniSliderDouble.vue";
+import MiniSliderDoubleImproved from "../components/MiniSliderDoubleImproved.vue";
 export default {
   name: "ViewHome",
   components: {
@@ -103,14 +111,14 @@ export default {
     CategoryCardContainer,
     ZoomSlider,
     MiniSlider,
-    MiniSliderDouble,
+    MiniSliderDoubleImproved,
   },
   data() {
     return {
       current_slide: 0,
       next_slide: 1,
       direction: "slide-in",
-      directionDoubleSlider: "slide-in",
+      directionDoubleSlider: "",
       isDoubleSliderAnimating: false,
       isSlideAnimating: false,
       slideInterval: null,
@@ -170,41 +178,55 @@ export default {
     };
   },
   methods: {
-    nextSlideDouble(step_parametar = 2) {
-      let step = step_parametar;
+    nextSlideDouble() {
       if (!this.isDoubleSliderAnimating) {
         this.isDoubleSliderAnimating = true;
-        const index =
-          this.current_slide == 4 - 1 ? 0 : this.current_slide + step;
-        this.current_slide = index > 4 - 1 ? 0 : index;
-        const next = this.current_slide + 1;
-        this.next_slide = next > 4 - 1 ? 0 : next;
-        this.directionDoubleSlider = "slide-in";
-        console.log("Metoda nextSlideDouble.");
-        console.log(this.current_slide, this.next_slide);
+        let active_slide =
+          document.getElementById("double-slides").firstElementChild;
+        this.directionDoubleSlider = "double-animate";
+        let all_slides = document.querySelectorAll(
+          ".zoom-slider-img-container"
+        );
+        all_slides.forEach((slide) => {
+          slide.classList.add("double-animate");
+        });
         if (this.isDoubleSliderAnimating) {
           setTimeout(() => {
             this.isDoubleSliderAnimating = false;
-          }, 1300);
+            all_slides.forEach((slide) => {
+              slide.classList.remove("double-animate");
+              this.directionDoubleSlider = "";
+              //append slide
+              document
+                .getElementById("double-slides")
+                .appendChild(active_slide);
+            });
+          }, 1000);
         }
       }
     },
-    previousSlideDouble(step_parametar = 2) {
-      let step = step_parametar;
+    previousSlideDouble() {
       if (!this.isDoubleSliderAnimating) {
         this.isDoubleSliderAnimating = true;
-        const index =
-          this.current_slide == 0 ? 4 - step : this.current_slide - step;
-        this.current_slide = index;
-        const next = this.current_slide + 1;
-        this.next_slide = next > 4 - 1 ? 0 : next;
-        this.directionDoubleSlider = "slide-out";
-        console.log("Metoda previousSlideDouble.");
-        console.log(this.current_slide, this.next_slide);
+        const active_slide = document.querySelector(
+          "#double-slides .single-item:last-of-type"
+        );
+        document.getElementById("double-slides").prepend(active_slide);
+        this.directionDoubleSlider = "double-animate-slide-out";
+        let all_slides = document.querySelectorAll(
+          ".zoom-slider-img-container"
+        );
+        all_slides.forEach((slide) => {
+          slide.classList.add("double-animate-slide-out");
+        });
         if (this.isDoubleSliderAnimating) {
           setTimeout(() => {
             this.isDoubleSliderAnimating = false;
-          }, 1300);
+            all_slides.forEach((slide) => {
+              slide.classList.remove("double-animate-slide-out");
+              this.directionDoubleSlider = "";
+            });
+          }, 1000);
         }
       }
     },
@@ -256,11 +278,11 @@ export default {
         }, 12000);
       }
     }
-    this.slideInterval = setInterval(() => {
+    /*this.slideInterval = setInterval(() => {
       if (!this.isDoubleSliderAnimating) {
         this.nextSlideDouble(2);
       }
-    }, 12000);
+    }, 12000);*/
   },
 };
 </script>

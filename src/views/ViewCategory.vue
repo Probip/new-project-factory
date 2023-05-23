@@ -17,8 +17,16 @@
       :i="i"
     />
     <div class="page-number row">
-      <div class="number" v-for="n in 10">{{ n }}</div>
-      <div class="number active">4</div>
+      <div
+        class="number"
+        v-for="n in 10"
+        :key="n"
+        :id="n"
+        :class="n == current_page_number ? 'active' : ''"
+        @click="changeCurrentpage"
+      >
+        {{ n }}
+      </div>
     </div>
   </div>
   <AppBanner class="banner-md" />
@@ -34,6 +42,7 @@ export default {
   },
   data() {
     return {
+      current_page_number: 4,
       news: [
         {
           headline: "Patriotsvv make cuts ... and Tim Tebow survives (so far)",
@@ -85,6 +94,11 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    changeCurrentpage(e) {
+      this.current_page_number = parseFloat(e.target.id);
+    },
   },
 };
 </script>

@@ -38,23 +38,18 @@
     <div class="container">
       <nav>
         <ul>
-          <li class="border-bottom news active">
-            <router-link to="/category">NEWS</router-link>
-          </li>
-          <li class="border-bottom business">
-            <router-link to="/category">BUSINESS</router-link>
-          </li>
-          <li class="border-bottom sport">
-            <router-link to="/category">SPORT</router-link>
-          </li>
-          <li class="border-bottom life">
-            <router-link to="/category">LIFE </router-link>
-          </li>
-          <li class="border-bottom tech">
-            <router-link to="/category">TECH</router-link>
-          </li>
-          <li class="border-bottom travel">
-            <router-link to="/category">TRAVEL</router-link>
+          <li
+            class="border-bottom"
+            v-for="(category, i) in categories"
+            :key="category"
+            :id="i"
+            :class="
+              current_category == i ? `active ${category}` : `${category}`
+            "
+          >
+            <router-link to="/category" @click="showCategory">{{
+              category.toUpperCase()
+            }}</router-link>
           </li>
         </ul>
       </nav>
@@ -64,6 +59,22 @@
 <script>
 export default {
   name: "AppHeader",
+  data() {
+    return {
+      current_category: 0,
+      categories: ["news", "business", "sport", "life", "tech", "travel"],
+    };
+  },
+  methods: {
+    showCategory(e) {
+      this.current_category = parseFloat(e.target.parentNode.id);
+      /*if (e.target.nodeName == "A") {
+        this.current_category = parseFloat(e.target.parentNode.id);
+      } else {
+        this.current_category = parseFloat(e.target.id);
+      }*/
+    },
+  },
 };
 </script>
 <style lang="scss">

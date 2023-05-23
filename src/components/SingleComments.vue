@@ -68,6 +68,7 @@ export default {
   },
   methods: {
     submitComment() {
+      let d, hours, timeOfTheDay, minutes, date;
       //podaci zapisani u formularu comments
       let user = document.querySelector("input#name").value;
       let email = document.querySelector("input#email").value;
@@ -80,6 +81,56 @@ export default {
       console.log(user);
       console.log(email);
       console.log(text);
+
+      const month = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      d = new Date();
+
+      hours = d.getHours();
+      timeOfTheDay = "am";
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfTheDay = "pm";
+      }
+      minutes = d.getMinutes();
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      hours = `${hours}:${minutes} ${timeOfTheDay}`;
+      date = `${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      console.log(user, email, text, date, hours);
+      const new_comment = document.createElement("div");
+      new_comment.classList.add("row", "pt-45", "m-50-30-0-30");
+      new_comment.innerHTML = `
+      <img
+        src="${require("../assets/user1.png")}"
+        alt="user image"
+        width="25px"
+        height="25px"
+      />
+      <span>
+        <div class="row space-between p-0">
+          <div class="row p-0">
+            <p class="user p-0">${user}</p>
+            <p class="date p-0">${date} ${hours}</p>
+          </div>
+          <a class="reply">Reply</a>
+        </div>
+        <p class="p-0 text-comment">${text}</p>
+      </span>`;
+      document.querySelector("#comments h2:last-of-type").before(new_comment);
     },
   },
 };
