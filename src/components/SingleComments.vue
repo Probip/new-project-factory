@@ -1,8 +1,11 @@
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <div class="news-list-item comments" id="comments">
     <h2>Comments</h2>
-    <div class="row pt-45 m-50-30-0-30" v-for="comment in comments">
+    <div
+      class="row pt-45 m-50-30-0-30"
+      v-for="(comment, i) in comments"
+      :key="i"
+    >
       <img
         :src="require('../assets/user1.png')"
         alt="user image"
@@ -78,9 +81,6 @@ export default {
       document.querySelector("input#name").value = "";
       document.querySelector("input#email").value = "";
       document.querySelector("textarea#text").value = "";
-      console.log(user);
-      console.log(email);
-      console.log(text);
 
       const month = [
         "Jan",

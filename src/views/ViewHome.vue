@@ -53,18 +53,11 @@
       @next="nextSlideDouble"
       @previous="previousSlideDouble"
     >
-      <!--<MiniSliderDouble
-        :current_slide="this.current_slide"
-        :next_slide="next_slide"
-        :direction="directionDoubleSlider"
-        slider="slider4"
-      />-->
       <MiniSliderDoubleImproved
         :current_slide="this.current_slide"
         :direction="directionDoubleSlider"
         slider="slider4"
       />
-      <!--<MiniSlider />-->
     </CategoryCardContainer>
     <!-- MiniSliders-->
     <CategoryCardContainer
@@ -211,6 +204,7 @@ export default {
         const active_slide = document.querySelector(
           "#double-slides .single-item:last-of-type"
         );
+        //prepend slide
         document.getElementById("double-slides").prepend(active_slide);
         this.directionDoubleSlider = "double-animate-slide-out";
         let all_slides = document.querySelectorAll(
@@ -273,16 +267,16 @@ export default {
       if (!isSlideAnimating) {
         this.mini_sliders[i].slideInterval = setInterval(() => {
           if (!isSlideAnimating) {
-            //this.nextSlide(i);
+            this.nextSlide(i);
           }
-        }, 12000);
+        }, 17000);
       }
     }
-    /*this.slideInterval = setInterval(() => {
+    this.slideInterval = setInterval(() => {
       if (!this.isDoubleSliderAnimating) {
-        this.nextSlideDouble(2);
+        this.nextSlideDouble();
       }
-    }, 12000);*/
+    }, 12000);
   },
 };
 </script>

@@ -1,18 +1,24 @@
-<!-- eslint-disable vue/no-use-v-if-with-v-for -->
-<!-- eslint-disable vue/require-v-for-key -->
-<!-- eslint-disable prettier/prettier -->
 <template>
   <div class="row slick-slider" :class="slider">
     <TransitionGroup :name="direction">
-      <div class="single-item column" v-for="i in 3" :key="i" :id="i-1" v-show="i-1 == current_slide">
-        <span v-if="slider==='slider4'" v-show="i == current_slide || i -1 == current_slide"></span>
+      <div
+        class="single-item column"
+        v-for="i in 3"
+        :key="i"
+        :id="i - 1"
+        v-show="i - 1 == current_slide"
+      >
+        <span
+          v-if="slider === 'slider4'"
+          v-show="i == current_slide || i - 1 == current_slide"
+        ></span>
         <img :src="require('../assets/Layer 59.png')" alt="slika" />
         <p class="date">August 26, 2013</p>
         <RouterLink to="/single">
-           <p class="headline">
+          <p class="headline">
             {{ i }}For Obama, MLK's shadow looms large ahead of speech
           </p>
-          </RouterLink>
+        </RouterLink>
       </div>
     </TransitionGroup>
   </div>
