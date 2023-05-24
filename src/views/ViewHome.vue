@@ -172,7 +172,10 @@ export default {
   },
   methods: {
     nextSlideDouble() {
-      if (!this.isDoubleSliderAnimating) {
+      if (
+        !this.isDoubleSliderAnimating &&
+        document.getElementById("double-slides")
+      ) {
         this.isDoubleSliderAnimating = true;
         let active_slide =
           document.getElementById("double-slides").firstElementChild;

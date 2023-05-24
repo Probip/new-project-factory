@@ -109,7 +109,7 @@ export default {
   },
   methods: {
     showTab(e) {
-      console.log(this.active_tab, parseFloat(e.target.id));
+      //console.log(this.active_tab, parseFloat(e.target.id));
       this.active_tab = parseFloat(e.target.id);
     },
   },
