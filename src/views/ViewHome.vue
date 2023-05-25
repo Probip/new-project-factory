@@ -172,10 +172,10 @@ export default {
   },
   methods: {
     nextSlideDouble() {
-      if (
-        !this.isDoubleSliderAnimating &&
-        document.getElementById("double-slides")
-      ) {
+      /* console.log(
+        document.getElementById("double-slides").firstElementChild.nodeName
+      );*/
+      if (!this.isDoubleSliderAnimating) {
         this.isDoubleSliderAnimating = true;
         let active_slide =
           document.getElementById("double-slides").firstElementChild;
@@ -263,6 +263,9 @@ export default {
         }
       }
     },
+  },
+  unmounted() {
+    this.isDoubleSliderAnimating = true;
   },
   mounted() {
     for (let i = 0; i < 2; i++) {
